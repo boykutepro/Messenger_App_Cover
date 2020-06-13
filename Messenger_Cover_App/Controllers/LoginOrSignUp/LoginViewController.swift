@@ -140,9 +140,10 @@ class LoginViewController: UIViewController {
                 return
             }
             
+            
+            
             let user = result.user
             print("Đăng nhập thành công: \(user)")
-            
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
         }
         

@@ -149,9 +149,9 @@ class RegisterViewController: UIViewController {
         //Logo
         let size = scrollView.width/9*2
         imageView.frame = CGRect(x: (scrollView.width - size)/2,
-                                     y: 20,
-                                     width: size,
-                                     height: size)
+                                 y: 20,
+                                 width: size,
+                                 height: size)
         imageView.layer.cornerRadius = size/2
         firstNameField.frame = CGRect(x: 30,
                                       y: imageView.bottom + 10,
@@ -196,25 +196,40 @@ class RegisterViewController: UIViewController {
                 return
         }
         
-        //Firebase login
-        FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { [weak self] (authResult, error) in
+        DatabaseManager.shared.userExists(with: email) { [weak self](exists) in
             guard let strongSelf = self else {
                 return
             }
-            guard let result = authResult, error == nil else {
-                print("Lỗi tạo tài khoản người dùng")
+            guard !exists else {
+                // user already exists
+                strongSelf.alertUserLoginError(message: "Email đã tồn tại !!!")
                 return
             }
             
-            let user = result.user
-            print("Đã tạo tài khoản: \(user)")
+            //Firebase Sign up
+            FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { (authResult, error) in
+
+                guard authResult! == nil, error == nil else {
+                    print("Lỗi tạo tài khoản người dùng")
+                    return
+                }
+                
+                //            let user = result.user
+                //            print("Đã tạo tài khoản: \(user)")
+                DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName,
+                                                                    lastName: lastName,
+                                                                    emailAddress: email))
+                
+                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            }
             
-            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
         }
+        
+        
     }
     
-    func alertUserLoginError () {
-        let alert = UIAlertController(title: "Opps", message: "Nhập đầy đủ thông tin để đăng kí", preferredStyle: .alert)
+    func alertUserLoginError (message: String = "Nhập đầy đủ thông tin để đăng kí") {
+        let alert = UIAlertController(title: "Opps", message: message, preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: "Quay lại", style: .cancel, handler: nil))
         present(alert, animated: true, completion: nil)

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C8FCDC92494D2BD00FF8144 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C8FCDC82494D2BD00FF8144 /* GoogleService-Info.plist */; };
+		4C8FCDCB2494DEE200FF8144 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8FCDCA2494DEE200FF8144 /* DatabaseManager.swift */; };
 		4C9EA6FC248DEE5D00FD3F14 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9EA6FB248DEE5D00FD3F14 /* AppDelegate.swift */; };
 		4C9EA6FE248DEE5D00FD3F14 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9EA6FD248DEE5D00FD3F14 /* SceneDelegate.swift */; };
 		4C9EA700248DEE5D00FD3F14 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9EA6FF248DEE5D00FD3F14 /* ConversationsViewController.swift */; };
@@ -27,6 +28,7 @@
 /* Begin PBXFileReference section */
 		02A7B4F9688BE4448B2290F8 /* Pods_Messenger_Cover_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Messenger_Cover_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C8FCDC82494D2BD00FF8144 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4C8FCDCA2494DEE200FF8144 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		4C9EA6F8248DEE5D00FD3F14 /* Messenger_Cover_App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger_Cover_App.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C9EA6FB248DEE5D00FD3F14 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4C9EA6FD248DEE5D00FD3F14 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 				4C9EA6FB248DEE5D00FD3F14 /* AppDelegate.swift */,
 				4C9EA6FD248DEE5D00FD3F14 /* SceneDelegate.swift */,
 				4CCD202724909F7500BBAE15 /* Extensions.swift */,
+				4C8FCDCA2494DEE200FF8144 /* DatabaseManager.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -288,6 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C9EA716248DF0E100FD3F14 /* LoginViewController.swift in Sources */,
+				4C8FCDCB2494DEE200FF8144 /* DatabaseManager.swift in Sources */,
 				4C9EA718248DF0F500FD3F14 /* RegisterViewController.swift in Sources */,
 				4C9EA71E248DF14500FD3F14 /* NewConversationViewController.swift in Sources */,
 				4C9EA700248DEE5D00FD3F14 /* ConversationsViewController.swift in Sources */,

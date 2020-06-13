@@ -6,5 +6,8 @@ target 'Messenger_Cover_App' do
   use_frameworks!
 
   # Pods for Messenger_Cover_App
+	pod 'Firebase/Core'
+	pod 'Firebase/Auth'
+	pod 'Firebase/Database'
 
 end

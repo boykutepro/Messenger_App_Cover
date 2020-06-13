@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class RegisterViewController: UIViewController {
     
@@ -18,13 +19,13 @@ class RegisterViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "person")
+        imageView.image = UIImage(systemName: "person.circle")
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = .clear
         imageView.tintColor = .gray
         imageView.clipsToBounds = true
-        imageView.layer.borderColor = UIColor.gray.cgColor
-        imageView.layer.borderWidth = 0.3
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
+        imageView.layer.borderWidth = 2
         return imageView
     } ()
     
@@ -37,7 +38,7 @@ class RegisterViewController: UIViewController {
         field.layer.borderWidth = 1
         field.layer.borderColor = UIColor.lightGray.cgColor
         field.placeholder = "First Name"
-        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
+        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 0))
         field.leftViewMode = .always
         field.backgroundColor = .white
         return field
@@ -52,7 +53,7 @@ class RegisterViewController: UIViewController {
         field.layer.borderWidth = 1
         field.layer.borderColor = UIColor.lightGray.cgColor
         field.placeholder = "Last Name"
-        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: 0))
+        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: 0))
         field.leftViewMode = .always
         field.backgroundColor = .white
         return field
@@ -177,6 +178,8 @@ class RegisterViewController: UIViewController {
     
     @objc private func registerButtonTapped () {
         
+        firstNameField.resignFirstResponder()
+        lastNameField.resignFirstResponder()
         emailField.resignFirstResponder()
         passwordField.resignFirstResponder()
         
@@ -191,6 +194,22 @@ class RegisterViewController: UIViewController {
             password.count >= 6 else {
                 alertUserLoginError()
                 return
+        }
+        
+        //Firebase login
+        FirebaseAuth.Auth.auth().createUser(withEmail: email, password: password) { [weak self] (authResult, error) in
+            guard let strongSelf = self else {
+                return
+            }
+            guard let result = authResult, error == nil else {
+                print("Lỗi tạo tài khoản người dùng")
+                return
+            }
+            
+            let user = result.user
+            print("Đã tạo tài khoản: \(user)")
+            
+            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
         }
     }
     
@@ -214,7 +233,11 @@ extension RegisterViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
-        if textField == emailField {
+        if textField == firstNameField {
+            lastNameField.becomeFirstResponder()
+        } else if textField == lastNameField {
+            emailField.becomeFirstResponder()
+        } else if textField == emailField {
             passwordField.becomeFirstResponder()
         } else if textField == passwordField {
             registerButtonTapped()

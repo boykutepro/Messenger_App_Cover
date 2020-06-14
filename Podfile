@@ -10,4 +10,7 @@ target 'Messenger_Cover_App' do
 	pod 'Firebase/Auth'
 	pod 'Firebase/Database'
 
+  # Facebook login
+	pod 'FBSDKLoginKit'
+
 end

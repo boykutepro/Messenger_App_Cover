@@ -17,7 +17,7 @@ class LoginViewController: UIViewController {
         scrollView.clipsToBounds = true
         return scrollView
     } ()
-
+    
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(named: "logo_messenger")
@@ -40,7 +40,7 @@ class LoginViewController: UIViewController {
         field.backgroundColor = .white
         return field
     } ()
-        
+    
     private let passwordField: UITextField = {
         let field = UITextField ()
         field.autocapitalizationType = .none
@@ -67,7 +67,7 @@ class LoginViewController: UIViewController {
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
         return button
     } ()
-
+    
     private let facebookLoginButton: FBLoginButton = {
         let button = FBLoginButton()
         button.permissions = ["email, public_profile"]
@@ -76,7 +76,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         title = "Log In"
         view.backgroundColor = .white
         
@@ -96,7 +96,7 @@ class LoginViewController: UIViewController {
     }
     
     func setupButton() {
-
+        
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         emailField.delegate = self
         passwordField.delegate = self
@@ -124,13 +124,13 @@ class LoginViewController: UIViewController {
                                      width: scrollView.width - 60,
                                      height: 52)
         loginButton.frame = CGRect(x: 30,
-                                     y: passwordField.bottom + 10,
-                                     width: scrollView.width - 60,
-                                     height: 52)
+                                   y: passwordField.bottom + 10,
+                                   width: scrollView.width - 60,
+                                   height: 52)
         facebookLoginButton.frame = CGRect(x: 30,
-                                     y: loginButton.bottom + 10,
-                                     width: scrollView.width - 60,
-                                     height: 52)
+                                           y: loginButton.bottom + 10,
+                                           width: scrollView.width - 60,
+                                           height: 52)
         facebookLoginButton.frame.origin.y = loginButton.bottom + 20
         
     }
@@ -155,13 +155,10 @@ class LoginViewController: UIViewController {
                 return
             }
             
-            
-            
             let user = result.user
             print("Đăng nhập thành công: \(user)")
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
         }
-        
     }
     
     func alertUserLoginError () {
@@ -177,7 +174,7 @@ class LoginViewController: UIViewController {
         registerVC.title = "Creat Accout"
         navigationController?.pushViewController(registerVC, animated: true)
     }
-
+    
 }
 
 extension LoginViewController: UITextFieldDelegate {
@@ -196,32 +193,76 @@ extension LoginViewController: UITextFieldDelegate {
 
 extension LoginViewController: LoginButtonDelegate{
     func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
-        // NO OPERATIOn
+        // NO OPERATION
     }
     
     func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+        // Unwrap the token from facebook
         guard let token = result?.token?.tokenString else {
             print("Đăng nhập bằng Facebook thất bại")
             return
         }
+        print("Get token: \(token)")
         
-        let credential = FacebookAuthProvider.credential(withAccessToken: token)
+        // Make a request object to Facebook to get the email and name for the logged in user
+        let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me",
+                                                         parameters: ["fields": "email, name"],
+                                                         tokenString: token,
+                                                         version: nil,
+                                                         httpMethod: .get)
         
-        FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] (authResult, error) in
-            guard let strongSelf = self else {
-                return
+        // Excute that request
+        facebookRequest.start { (_ , result, error) in
+            
+            //Get data from facebook
+            guard let result = result as? [String: Any], error == nil else {
+                    print("Failed to make facebook request")
+                    return
             }
             
-            guard authResult != nil, error == nil else {
-                
-                if let error = error {
-                    print("Chưa có chứng chỉ cho phép từ Facebook, mã lỗi: \(error)")
-                }
-               
+            print(result)
+            
+            guard let userName = result["name"] as? String,
+                let email = result["email"] as? String else {
+                    print("Failed to get data from facebook")
+                    return
+            }
+
+            // Split the name to get firstName and lastName
+            let nameComponents = userName.components(separatedBy: " ")
+            guard nameComponents.count >= 2 else {
                 return
             }
-            print("Đăng nhập thành công")
-            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            let firstName = nameComponents[0]
+            let lastName = nameComponents[1]
+            
+            //print(firstName, lastName)
+
+            DatabaseManager.shared.userExists(with: email) { (exists) in
+                if !exists {
+                    DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName, lastName: lastName, emailAddress: email))
+                    //print("Add user success")
+                }
+            }
+            
+            // Lấy chứng chỉ của facebook để đăng nhập.
+            let credential = FacebookAuthProvider.credential(withAccessToken: token)
+            FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] (authResult, error) in
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                guard authResult != nil, error == nil else {
+                    // Nếu không có chứng chỉ của FB thì hiển thị error.
+                    if let error = error {
+                        print("Chưa có chứng chỉ cho phép từ Facebook, mã lỗi: \(error)")
+                    }
+                    
+                    return
+                }
+                print("Đăng nhập thành công")
+                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            }
         }
     }
 }

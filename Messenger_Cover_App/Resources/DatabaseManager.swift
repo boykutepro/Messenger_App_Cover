@@ -30,6 +30,9 @@ extension DatabaseManager {
         var safeEmail = email.replacingOccurrences(of: ".", with: "-")
         safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
         
+        // Firebase database cho phép ta nhìn thấy sự thay đổi của giá trị trên bất cứ mục nào
+        // trong cơ sở dữ liệu tuần tự của bạn bằng cách chỉ định "child" bạn muốn và chọn loại
+        // quan sát nào. <observe: quan sát>.
         database.child(safeEmail).observeSingleEvent(of: .value) { (snapshot) in
         // this snapshot has a value property opposite that can be optional if it doesn't exist
             //guard let foundEmail = snapshot.value as? String else {
@@ -39,9 +42,6 @@ extension DatabaseManager {
             }
             completion(true)
         }
-        
-        
-        
     }
     
     

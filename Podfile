@@ -12,5 +12,7 @@ target 'Messenger_Cover_App' do
 
   # Facebook login
 	pod 'FBSDKLoginKit'
+  # Google Sign In
+	pod 'GoogleSignIn'
 
 end

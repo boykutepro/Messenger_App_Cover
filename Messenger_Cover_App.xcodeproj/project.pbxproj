@@ -186,6 +186,7 @@
 				4C9EA6F5248DEE5D00FD3F14 /* Frameworks */,
 				4C9EA6F6248DEE5D00FD3F14 /* Resources */,
 				8C849959DF5F4EAC47F20F3C /* [CP] Embed Pods Frameworks */,
+				00A43FFF919B76DC4BACB703 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -244,6 +245,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		00A43FFF919B76DC4BACB703 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Messenger_Cover_App/Pods-Messenger_Cover_App-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Messenger_Cover_App/Pods-Messenger_Cover_App-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Messenger_Cover_App/Pods-Messenger_Cover_App-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		01D2471451B2C73D9876C27A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;

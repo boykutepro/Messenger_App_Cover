@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
+import GoogleSignIn
 
 class LoginViewController: UIViewController {
     
@@ -74,8 +75,23 @@ class LoginViewController: UIViewController {
         return button
     } ()
     
+    private let googleLogInButton = GIDSignInButton()
+    
+    private var loginObserver: NSObjectProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // thoát khỏi Observation này nếu có một Observation đang chạy và chỉ để tiết kiệm bộ nhớ và dọn dẹp mọi thứ.
+        loginObserver = NotificationCenter.default.addObserver(forName: .didLogInNotification, object: nil, queue: .main) { [weak self](_) in
+            
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.dismiss(animated: true, completion: nil)
+        }
+        
+        GIDSignIn.sharedInstance()?.presentingViewController = self
         
         title = "Log In"
         view.backgroundColor = .white
@@ -93,6 +109,7 @@ class LoginViewController: UIViewController {
         scrollView.addSubview(passwordField)
         scrollView.addSubview(loginButton)
         scrollView.addSubview(facebookLoginButton)
+        scrollView.addSubview(googleLogInButton)
     }
     
     func setupButton() {
@@ -101,6 +118,12 @@ class LoginViewController: UIViewController {
         emailField.delegate = self
         passwordField.delegate = self
         facebookLoginButton.delegate = self
+    }
+    
+    deinit {
+        if let observer = loginObserver {
+            NotificationCenter.default.removeObserver(loginObserver)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -131,7 +154,11 @@ class LoginViewController: UIViewController {
                                            y: loginButton.bottom + 10,
                                            width: scrollView.width - 60,
                                            height: 52)
-        facebookLoginButton.frame.origin.y = loginButton.bottom + 20
+        googleLogInButton.frame = CGRect(x: 30,
+                                         y: facebookLoginButton.bottom + 10,
+                                         width: scrollView.width - 60,
+                                         height: 52)
+        
         
     }
     
@@ -216,8 +243,8 @@ extension LoginViewController: LoginButtonDelegate{
             
             //Get data from facebook
             guard let result = result as? [String: Any], error == nil else {
-                    print("Failed to make facebook request")
-                    return
+                print("Failed to make facebook request")
+                return
             }
             
             print(result)
@@ -227,7 +254,7 @@ extension LoginViewController: LoginButtonDelegate{
                     print("Failed to get data from facebook")
                     return
             }
-
+            
             // Split the name to get firstName and lastName
             let nameComponents = userName.components(separatedBy: " ")
             guard nameComponents.count >= 2 else {
@@ -237,7 +264,7 @@ extension LoginViewController: LoginButtonDelegate{
             let lastName = nameComponents[1]
             
             //print(firstName, lastName)
-
+            
             DatabaseManager.shared.userExists(with: email) { (exists) in
                 if !exists {
                     DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName, lastName: lastName, emailAddress: email))
@@ -245,7 +272,7 @@ extension LoginViewController: LoginButtonDelegate{
                 }
             }
             
-            // Lấy chứng chỉ của facebook để đăng nhập.
+            // Lấy chứng chỉ của facebook để đăng nhập với Firebase.
             let credential = FacebookAuthProvider.credential(withAccessToken: token)
             FirebaseAuth.Auth.auth().signIn(with: credential) { [weak self] (authResult, error) in
                 guard let strongSelf = self else {

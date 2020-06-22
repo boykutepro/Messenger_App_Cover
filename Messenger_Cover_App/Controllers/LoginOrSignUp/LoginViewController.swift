@@ -77,6 +77,14 @@ class LoginViewController: UIViewController {
     
     private let googleLogInButton = GIDSignInButton()
     
+    private let loginWithLb: UILabel = {
+        let label = UILabel()
+        label.text = "OR LOGIN WITH"
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 13)
+        return label
+    } ()
+    
     private var loginObserver: NSObjectProtocol?
     
     override func viewDidLoad() {
@@ -108,6 +116,7 @@ class LoginViewController: UIViewController {
         scrollView.addSubview(emailField)
         scrollView.addSubview(passwordField)
         scrollView.addSubview(loginButton)
+        scrollView.addSubview(loginWithLb)
         scrollView.addSubview(facebookLoginButton)
         scrollView.addSubview(googleLogInButton)
     }
@@ -139,7 +148,7 @@ class LoginViewController: UIViewController {
                                      width: size,
                                      height: size)
         emailField.frame = CGRect(x: 30,
-                                  y: logoImageView.bottom + 10,
+                                  y: logoImageView.bottom + 30,
                                   width: scrollView.width - 60,
                                   height: 52)
         passwordField.frame = CGRect(x: 30,
@@ -147,17 +156,22 @@ class LoginViewController: UIViewController {
                                      width: scrollView.width - 60,
                                      height: 52)
         loginButton.frame = CGRect(x: 30,
-                                   y: passwordField.bottom + 10,
+                                   y: passwordField.bottom + 70,
                                    width: scrollView.width - 60,
                                    height: 52)
-        facebookLoginButton.frame = CGRect(x: 30,
-                                           y: loginButton.bottom + 10,
-                                           width: scrollView.width - 60,
-                                           height: 52)
-        googleLogInButton.frame = CGRect(x: 30,
+        loginWithLb.frame = CGRect(x: loginButton.frame.midX - loginWithLb.bounds.width/2,
+                                   y: loginButton.bottom + 20,
+                                   width: scrollView.width - 60,
+                                   height: 40)
+        
+        facebookLoginButton.frame = CGRect(x: loginButton.frame.midX - facebookLoginButton.bounds.width/2,
+                                           y: loginWithLb.bottom + 20,
+                                           width: scrollView.width - 138,
+                                           height: 40)
+        googleLogInButton.frame = CGRect(x: loginButton.frame.midX - googleLogInButton.bounds.width/2,
                                          y: facebookLoginButton.bottom + 10,
-                                         width: scrollView.width - 60,
-                                         height: 52)
+                                         width: scrollView.width - 132,
+                                         height: 0)
         
         
     }
@@ -213,7 +227,6 @@ extension LoginViewController: UITextFieldDelegate {
         } else if textField == passwordField {
             loginButtonTapped()
         }
-        
         return true
     }
 }

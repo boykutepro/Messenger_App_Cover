@@ -126,6 +126,9 @@ class RegisterViewController: UIViewController {
     
     func setupButton() {
         registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
+        
+        firstNameField.delegate = self
+        lastNameField.delegate = self
         emailField.delegate = self
         passwordField.delegate = self
         
@@ -149,12 +152,12 @@ class RegisterViewController: UIViewController {
         //Logo
         let size = scrollView.width/9*2
         imageView.frame = CGRect(x: (scrollView.width - size)/2,
-                                 y: 20,
+                                 y: 40,
                                  width: size,
                                  height: size)
         imageView.layer.cornerRadius = size/2
         firstNameField.frame = CGRect(x: 30,
-                                      y: imageView.bottom + 10,
+                                      y: imageView.bottom + 40,
                                       width: scrollView.width - 60,
                                       height: 52)
         lastNameField.frame = CGRect(x: 30,
@@ -170,7 +173,7 @@ class RegisterViewController: UIViewController {
                                      width: scrollView.width - 60,
                                      height: 52)
         registerButton.frame = CGRect(x: 30,
-                                      y: passwordField.bottom + 10,
+                                      y: passwordField.bottom + 60,
                                       width: scrollView.width - 60,
                                       height: 52)
         

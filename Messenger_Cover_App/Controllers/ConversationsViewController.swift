@@ -11,6 +11,11 @@ import FirebaseAuth
 
 class ConversationsViewController: UIViewController {
 
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        
+        return tableView
+    } ()
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.

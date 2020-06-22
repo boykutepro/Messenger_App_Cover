@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C25DD8524A0950D006BBCA4 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25DD8424A0950D006BBCA4 /* ChatViewController.swift */; };
+		4C25DD8724A0A4FA006BBCA4 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C25DD8624A0A4FA006BBCA4 /* StorageManager.swift */; };
 		4C8FCDC92494D2BD00FF8144 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C8FCDC82494D2BD00FF8144 /* GoogleService-Info.plist */; };
 		4C8FCDCB2494DEE200FF8144 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C8FCDCA2494DEE200FF8144 /* DatabaseManager.swift */; };
 		4C9EA6FC248DEE5D00FD3F14 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C9EA6FB248DEE5D00FD3F14 /* AppDelegate.swift */; };
@@ -29,6 +30,7 @@
 /* Begin PBXFileReference section */
 		02A7B4F9688BE4448B2290F8 /* Pods_Messenger_Cover_App.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Messenger_Cover_App.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C25DD8424A0950D006BBCA4 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		4C25DD8624A0A4FA006BBCA4 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		4C8FCDC82494D2BD00FF8144 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4C8FCDCA2494DEE200FF8144 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		4C9EA6F8248DEE5D00FD3F14 /* Messenger_Cover_App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Messenger_Cover_App.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -147,6 +149,7 @@
 				4C9EA6FD248DEE5D00FD3F14 /* SceneDelegate.swift */,
 				4CCD202724909F7500BBAE15 /* Extensions.swift */,
 				4C8FCDCA2494DEE200FF8144 /* DatabaseManager.swift */,
+				4C25DD8624A0A4FA006BBCA4 /* StorageManager.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -323,6 +326,7 @@
 				4C9EA6FE248DEE5D00FD3F14 /* SceneDelegate.swift in Sources */,
 				4C25DD8524A0950D006BBCA4 /* ChatViewController.swift in Sources */,
 				4C9EA71A248DF10F00FD3F14 /* PhotoViewerViewController.swift in Sources */,
+				4C25DD8724A0A4FA006BBCA4 /* StorageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

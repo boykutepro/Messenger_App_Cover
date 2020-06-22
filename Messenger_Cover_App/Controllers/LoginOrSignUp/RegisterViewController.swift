@@ -204,6 +204,8 @@ class RegisterViewController: UIViewController {
         
         spinner.show(in: view)
         
+        
+        //Firebase sign Up
         DatabaseManager.shared.userExists(with: email) { [weak self](exists) in
             guard let strongSelf = self else {
                 return
@@ -229,9 +231,29 @@ class RegisterViewController: UIViewController {
                 
                 //            let user = result.user
                 //            print("Đã tạo tài khoản: \(user)")
-                DatabaseManager.shared.insertUser(with: ChatAppUser(firstName: firstName,
-                                                                    lastName: lastName,
-                                                                    emailAddress: email))
+                
+                let chatUser = ChatAppUser(firstName: firstName,
+                lastName: lastName,
+                emailAddress: email)
+                DatabaseManager.shared.insertUser(with: chatUser, completion: { success in
+                        // Upload image
+                    guard let image = strongSelf.imageView.image,
+                        let data = image.pngData() else {
+                        return
+                    }
+                    
+                    let fileName = chatUser.profilePictureFileName
+                    StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { (result) in
+                        switch result {
+                        case .success(let downloadUrl):
+                           //Lưu về máy
+                            UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                            print(downloadUrl)
+                        case .failure(let error):
+                            print("Storage Manager Error: \(error)")
+                        }
+                    }
+                })
                 
                 strongSelf.navigationController?.dismiss(animated: true, completion: nil)
             }

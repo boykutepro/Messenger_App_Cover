@@ -51,7 +51,6 @@ class ConversationsViewController: UIViewController {
     @objc func didTapComposeButton() {
         let newChatVC = NewConversationViewController()
         let navigation = UINavigationController(rootViewController: newChatVC)
-        navigation.modalPresentationStyle = .fullScreen
         present(navigation, animated: true, completion: nil)
     }
     

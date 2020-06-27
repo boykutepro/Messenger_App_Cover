@@ -212,6 +212,9 @@ class LoginViewController: UIViewController {
             }
             
             let user = result.user
+            
+            UserDefaults.standard.set(email, forKey: "email")
+            
             print("Đăng nhập thành công: \(user)")
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
         }
@@ -287,6 +290,8 @@ extension LoginViewController: LoginButtonDelegate{
                     print("Failed to get data from facebook")
                     return
             }
+            
+            UserDefaults.standard.set(email, forKey: "email")
             
             // Split the name to get firstName and lastName
 //            let nameComponents = userName.components(separatedBy: " ")

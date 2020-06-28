@@ -11,6 +11,8 @@ import JGProgressHUD
 
 class NewConversationViewController: UIViewController {
 
+    public var completion: (([String: String]) -> (Void))?
+    
     private let spinner = JGProgressHUD(style: .extraLight)
 
     private var users = [[String: String]] ()
@@ -101,6 +103,11 @@ extension NewConversationViewController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         // Vao man hinh nhan tin
+        let targetUserData = results[indexPath.row]
+        dismiss(animated: true) { [weak self] in
+            self?.completion?(targetUserData)
+        }
+//        completion?(targetUserData)
     }
     
 }

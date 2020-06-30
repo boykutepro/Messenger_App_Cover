@@ -10,15 +10,30 @@ import UIKit
 import FirebaseAuth
 import JGProgressHUD
 
+struct Conversation {
+    let id: String
+    let name: String
+    let otherUserEmail: String
+    let latestMessage: LatestMessage
+}
+
+struct LatestMessage {
+    let date: String
+    let text: String
+    let isRead: Bool
+}
+
 class ConversationsViewController: UIViewController {
 
     private let spinner = JGProgressHUD(style: .dark)
 
+    private var conversations = [Conversation] ()
     
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.isHidden = true
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(ConversationTableViewCell.self,
+                           forCellReuseIdentifier: ConversationTableViewCell.identifier)
         return tableView
     } ()
     
@@ -41,6 +56,33 @@ class ConversationsViewController: UIViewController {
         addComponents()
         setupTableView()
         fetchConversations()
+        startListeningForConversation()
+    }
+    
+    private func startListeningForConversation() {
+        
+        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
+            return
+        }
+        print("starting conversation fetch...")
+        let safeEmail = DatabaseManager.safeEmail(emailAddress: email)
+        DatabaseManager.shared.getAllConversations(for: safeEmail) { [weak self] (result) in
+            switch result {
+            case .success(let conversations):
+                print("Successfully got conversation models")
+                guard !conversations.isEmpty else {
+                    return
+                }
+                self?.conversations = conversations
+                
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
+                
+            case .failure(let error):
+                print("Failed to get convos: \(error)")
+            }
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -105,23 +147,29 @@ class ConversationsViewController: UIViewController {
 extension ConversationsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return conversations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
-        cell.textLabel?.text = "Hello World"
-        cell.accessoryType = .disclosureIndicator
+        let model = conversations[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier, for: indexPath) as! ConversationTableViewCell
+        cell.configure(with: model)
+//        cell.textLabel?.text = "Hello World"
+//        cell.accessoryType = .disclosureIndicator
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let model = conversations[indexPath.row]
         
-        let chatVC = ChatViewController(with: "")
-        chatVC.title = "Tung Vu Thien"
+        let chatVC = ChatViewController(with: model.otherUserEmail)
+        chatVC.title = model.name
         chatVC.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(chatVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
     }
 }
